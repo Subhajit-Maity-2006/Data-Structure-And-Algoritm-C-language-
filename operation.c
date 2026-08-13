@@ -1,0 +1,128 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<malloc.h>
+//Create structure
+struct sll{int val;struct sll*next;};
+//Create funciton
+void createlist(struct sll *);
+void display(struct sll*);
+int count(struct sll *);
+void insertnode(struct sll **);
+int main(){
+    struct sll*node;
+    int choice;
+    //Object created but size in not allocated
+    node=(struct sll*)malloc(sizeof(struct sll));// Size allocated
+    //Check size allocated or not 
+    if(node == NULL){
+        printf("Memory is not allocated");
+        exit (1); // allocation fail
+    }
+    node->next = NULL;
+    do{
+        printf("\n\n--------LINKED LIST MENU--------");
+        printf("\n1. Create List");
+        printf("\n2. Display List");
+        printf("\n3. Count Nodes");
+        printf("\n4. Insert at Beginning");
+        printf("\n5. Exit\n");
+
+        printf("Enter your choice:");
+        scanf("%d",&choice);
+    switch (choice)
+    {
+    case 1:
+        createlist(node);
+        break;
+    case 2:
+        display(node);
+        break;
+    case 3:
+        printf("No of nodes:%d",count(node));
+        break; 
+    case 4:
+         insertnode(&node);
+        break;  
+    case 5:
+        printf("\n Ended program");
+        break;
+    default:
+        printf("Invalid choice");
+    }
+}
+while(choice !=5);
+    return 0;
+}
+//creating a single linked list dynamically
+void createlist(struct sll * node){
+    char ch;
+    int i=1;
+    printf("Enter the value of %d node:",i);
+    scanf("%d",&node->val);
+    node->next = NULL; //Bcz in single linklist first box is value and 2 nd bos is null make sure of it 
+    i++;
+    getchar();
+    printf("\n Enter q to quite and any other to continue:\n");
+    ch=getchar();
+    while(ch != 'q'){
+        node->next =(struct sll*)malloc(sizeof(struct sll));
+        if(node ->next == NULL){
+        printf("Memory is not allocated");
+        exit (1); // allocation fail
+    }
+    node=node->next;
+    printf("\n Enter the value of new node:");
+    scanf("%d",&node->val);//New assign value put in the empty node
+    node->next = NULL; // Again null the next box
+    i++;
+    getchar();
+    printf("\n Enter 'q' to quite and any other to continue:\n");
+    ch = getchar();
+    }//end of while
+}//End of create list function 
+
+
+//display the single linked list 
+void display(struct sll *node)
+{
+    printf("\nThe elements are: ");
+
+    while(node != NULL)
+    {
+        printf("%d -> ", node->val);
+        node = node->next;
+    }
+
+    printf("NULL");
+}
+
+
+//Counting the no of the node
+int count(struct sll * node){
+    int count=0;
+    while(node!=NULL){
+        count ++;
+        node = node->next;
+    }
+    return count;
+}
+
+//INSERT A NEW NODE AT THE BEGINING
+void insertnode(struct sll **start)
+{
+    struct sll *new;
+
+    new = (struct sll *)malloc(sizeof(struct sll));
+
+    if(new == NULL)
+    {
+        printf("\nInsufficient memory\n");
+        exit(1);
+    }
+
+    printf("Enter value: ");
+    scanf("%d", &new->val);
+
+    new->next = *start;
+    *start = new;
+}
