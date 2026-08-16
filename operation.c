@@ -15,6 +15,7 @@ void insertnode(struct sll **);
 void searchnode(struct sll *);
 void insertend(struct sll *);
 void deletebegin(struct sll **);
+void deleteend(struct sll**);
 int main()
 {
     struct sll *node;
@@ -38,7 +39,8 @@ int main()
         printf("\n5. Search the node:");
         printf("\n6. Insert the node at the end of the list:");
         printf("\n7: Delete the node from begine:");
-        printf("\n8. Exit\n");
+        printf("\n8. Delete the node from end:");
+        printf("\n9. Exit\n");
 
         printf("Enter your choice:");
         scanf("%d", &choice);
@@ -51,7 +53,7 @@ int main()
             display(node);
             break;
         case 3:
-            printf("No of nodes:%d", count(node));
+            printf("\nNo of nodes:%d", count(node));
             break;
         case 4:
             insertnode(&node);
@@ -67,13 +69,17 @@ int main()
             case 7:
             deletebegin(&node);
             break;
-        case 8:
+
+            case 8:
+            deleteend(&node);
+            break;
+            case 9:
             printf("\n Ended program");
             break;
         default:
             printf("Invalid choice");
         }
-    } while (choice != 8);
+    } while (choice != 9);
     return 0;
 }
 // creating a single linked list dynamically
@@ -81,31 +87,44 @@ void createlist(struct sll *node)
 {
     char ch;
     int i = 1;
-    printf("Enter the value of %d node:", i);
+
+    printf("Enter the value of %d node: ", i);
     scanf("%d", &node->val);
-    node->next = NULL; // Bcz in single linklist first box is value and 2 nd bos is null make sure of it
+
+    node->next = NULL;
     i++;
-    getchar();
-    printf("\n Enter q to quite and any other to continue:\n");
-    ch = getchar();
-    while (ch != 'q')
+
+    printf("\nEnter q to quit and any other key to continue: ");
+    scanf(" %c", &ch);
+
+    // Remove remaining characters from input buffer
+    while(getchar() != '\n');
+
+    while(ch != 'q')
     {
         node->next = (struct sll *)malloc(sizeof(struct sll));
-        if (node->next == NULL)
+
+        if(node->next == NULL)
         {
             printf("Memory is not allocated");
-            exit(1); // allocation fail
+            exit(1);
         }
+
         node = node->next;
-        printf("\n Enter the value of new node:");
-        scanf("%d", &node->val); // New assign value put in the empty node
-        node->next = NULL;       // Again null the next box
+
+        printf("\nEnter the value of %d node: ", i);
+        scanf("%d", &node->val);
+
+        node->next = NULL;
         i++;
-        getchar();
-        printf("\n Enter 'q' to quite and any other to continue:\n");
-        ch = getchar();
-    } // end of while
-} // End of create list function
+
+        printf("\nEnter q to quit and any other key to continue: ");
+        scanf(" %c", &ch);
+
+        // Remove remaining characters from input buffer
+        while(getchar() != '\n');
+    }
+}
 
 // display the single linked list
 void display(struct sll *node)
@@ -166,13 +185,12 @@ void searchnode(struct sll *node){
             found=1;
             break;
         }
-        node=node->next;
+          node=node->next;
         position++;
+    }
         if(found==0){
             printf("The element is not found");
         }
-    }
-
 }
 
 //INSERT A NODE AT LAST OF THE LIST
@@ -207,4 +225,40 @@ void deletebegin(struct sll **node)
     *node = (*node)->next;
 
     free(temp);
+}
+
+void deleteend(struct sll **node)
+{
+    struct sll *temp, *prev;
+
+    // Empty list
+    if(*node == NULL)
+    {
+        printf("\nEmpty list\n");
+        return;
+    }
+
+    // Only one node
+    if((*node)->next == NULL)
+    {
+        free(*node);
+        *node = NULL;
+        return;
+    }
+
+    temp = *node;
+    prev = NULL;
+
+    // Traverse to the last node
+    while(temp->next != NULL)
+    {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // Delete last node
+    free(temp);
+
+    // Make second-last node the last node
+    prev->next = NULL;
 }
