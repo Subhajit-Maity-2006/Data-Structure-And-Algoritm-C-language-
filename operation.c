@@ -16,6 +16,8 @@ void searchnode(struct sll *);
 void insertend(struct sll *);
 void deletebegin(struct sll **);
 void deleteend(struct sll**);
+void sortsll(struct sll*);
+void reversesll(struct sll **);
 int main()
 {
     struct sll *node;
@@ -40,7 +42,9 @@ int main()
         printf("\n6. Insert the node at the end of the list:");
         printf("\n7: Delete the node from begine:");
         printf("\n8. Delete the node from end:");
-        printf("\n9. Exit\n");
+        printf("\n9. Sorting of linkedlist:");
+        printf("\n10. Revesre the single linked list:");
+        printf("\n11. Exit\n");
 
         printf("Enter your choice:");
         scanf("%d", &choice);
@@ -74,12 +78,17 @@ int main()
             deleteend(&node);
             break;
             case 9:
+            sortsll(node);
+            break;
+            case 10:
+            reversesll(&node);
+            case 11:
             printf("\n Ended program");
             break;
         default:
             printf("Invalid choice");
         }
-    } while (choice != 9);
+    } while (choice != 11);
     return 0;
 }
 // creating a single linked list dynamically
@@ -226,7 +235,7 @@ void deletebegin(struct sll **node)
 
     free(temp);
 }
-
+//Delete the node from end
 void deleteend(struct sll **node)
 {
     struct sll *temp, *prev;
@@ -261,4 +270,46 @@ void deleteend(struct sll **node)
 
     // Make second-last node the last node
     prev->next = NULL;
+}
+void sortsll(struct sll *node){
+    struct sll *i;
+    struct sll *j;
+    int temp;
+    for(i=node;i->next !=NULL;i=i->next){
+        for(j=i->next;j !=NULL;j=j->next){
+            if(i->val >  j->val){
+                temp=i->val;
+                i->val=j->val;
+                j->val=temp;
+            }
+        }
+    }
+
+}
+
+void reversesll(struct sll **node){
+    struct sll *start;
+    struct sll *curr;
+    struct sll *prev;
+    struct sll *ptr;
+    start=*node;
+    //if single node present
+    if(start->next ==NULL){
+        return ;
+    }
+curr = start;
+    prev = curr->next;
+    ptr = prev->next;
+
+    curr->next = NULL;
+
+    while (prev != NULL)
+    {
+        ptr = prev->next;
+        prev->next = curr;
+        curr = prev;
+        prev = ptr;
+    }
+
+    *node = curr;
 }
